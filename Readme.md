@@ -7,7 +7,7 @@
   Большое количество rules можно посмотреть на https://samber.github.io/awesome-prometheus-alerts/rules .
 
   Скачиваем с GitHub-а :
-  git clone https://github.com/dimonpoc/metrics-telegram-1.git
+  git clone https://github.com/dimonpoc/metrics-telegram.git
 
   Вносим изменения в alertmenager.yml (см. ниже).
 

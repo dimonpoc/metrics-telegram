@@ -1,0 +1,22 @@
+¢
+‘
+[{}/{severity=~"^(?:critical|warning|notification)$"}:{alertname="NodeFilesystemAvailBytes"}
+telegram_bottelegram*á×£½‡¸Òƒ2
+ñ—ÎûâÈÚÌ´ÉÚ£½‡¸Òƒ 
+
+Z{}/{severity=~"^(?:critical|warning|notification)$"}:{alertname="NodeFilesystemSizeBytes"}
+telegram_bottelegram*á×£½ÔÛÊÎ2	“­‡„Ö‘‹ÉÚ£½ÔÛÊÎ–
+…
+P{}/{severity=~"^(?:critical|warning|notification)$"}:{alertname="MemTotalBytes"}
+telegram_bottelegram*á×£½ÆÜóÂ2	ãÜÄ£ªÅ„ÀÉÚ£½ÆÜóÂš
+‰
+T{}/{severity=~"^(?:critical|warning|notification)$"}:{alertname="MemAvailableBytes"}
+telegram_bottelegram*á×£½›½¡¼2	¶ò‡ÈÏ·¶ÖCÉÚ£½›½¡¼‘
+€
+J{}/{severity=~"^(?:critical|warning|notification)$"}:{alertname="CpuLoad"}
+telegram_bottelegram*´×£½àœ¿2
+²›‚è¿¥€îŠœÚ£½àœ¿¡
+
+Z{}/{severity=~"^(?:critical|warning|notification)$"}:{alertname="PrometheusTargetMissing"}
+telegram_bottelegram*éÖ£½õ¾ÁÅ:
+õ¼ÔÍÛà˜±ÑÙ£½õ¾ÁÅ
