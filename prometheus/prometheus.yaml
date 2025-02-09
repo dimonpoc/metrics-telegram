@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 5s
+  scrape_timeout: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+
+# node exporter (https://github.com/prometheus/node_exporter)
+  - job_name: 'node'
+    scrape_interval: 5s
+    static_configs:
+    - targets: ['node-exporter:9100']
+
+rule_files:
+  - 'alert.rules'
+
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets: 
+      - "alertmanager:9093"

@@ -1,0 +1,85 @@
+services:
+          
+  prometheus:
+    image: "prom/prometheus:latest"
+    container_name: prometheus
+    environment:
+      TZ: "Europe/Moscow"
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
+      - ./prometheus:/etc/prometheus/
+    #  - ./config/web-config.yaml:/etc/prometheus/web-config.yaml:ro
+      - prometheus-data:/prometheus
+    user: "root"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yaml
+    #  - --web.config.file=/etc/prometheus/web-config.yaml
+    #  - --web.enable-lifecycle
+      - --storage.tsdb.retention.time=2d
+      - --storage.tsdb.retention.size=100MB
+    restart: unless-stopped
+    depends_on:
+      node-exporter:
+        condition: service_started 
+    networks:
+      - metr_teleg
+
+
+  node-exporter:
+    image: prom/node-exporter
+    user: "root"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    container_name: node-exporter
+    hostname: node-exporter
+    command: 
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --collector.filesystem.ignored-mount-points #=^/(sys|proc|dev|run)($|/)
+      - ^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|
+        rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)
+    ports:
+      - 9100:9100
+    restart: unless-stopped
+    environment:
+      - TZ="Europe/Moscow"
+    networks:
+      - metr_teleg
+
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    user: "root"
+    ports:
+      - 9093:9093
+    volumes:
+      - ./alertmanager/:/etc/alertmanager/
+    container_name: alertmanager
+    hostname: alertmanager
+    environment:
+      - TZ="Europe/Moscow"
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --storage.path=/etc/alertmanager/data
+    depends_on:
+      prometheus:
+        condition: service_started
+    networks:
+      - metr_teleg
+
+
+networks:
+  metr_teleg:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  prometheus-data:
+    driver: local

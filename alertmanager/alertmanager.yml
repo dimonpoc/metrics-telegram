@@ -1,0 +1,28 @@
+global:
+  resolve_timeout: 10s
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 1m
+  repeat_interval: 3m
+  receiver: 'telegram_bot'
+
+  routes:
+    - receiver: 'telegram_bot'
+      group_wait: 10s
+      match_re:
+        severity: critical|warning|notification
+      continue: true
+
+receivers:
+- name: 'telegram_bot'
+  telegram_configs:
+  - bot_token: '...' # здесь telegram token конкретного бота
+    api_url: 'https://api.telegram.org'
+    chat_id: # здесь записывается Telegram ID без апострофов
+    parse_mode: 'HTML'
+    message: '{{template "telegram.text" . }}'
+    
+templates:
+- '/etc/alertmanager/default.tmpl'

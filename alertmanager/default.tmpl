@@ -1,0 +1,11 @@
+{{ define "telegram.text" }}
+{{ range .Alerts }}
+{{ if eq .Status "firing"}}🔥 <b>{{ .Status | toUpper }}</b>{{ else }}✅<b>{{ .Status | toUpper }}</b>{{ end }}
+<b>Alert:</b> {{ .Labels.alertname }}
+<b>Summary:</b> {{ .Annotations.summary }}
+<b>Description:</b> {{ .Annotations.description }}
+<b>Details:</b>
+{{range .Labels.SortedPairs }} - {{ .Name }}: <i>{{ .Value }}</i>
+{{ end }}
+{{ end }}
+{{ end }}

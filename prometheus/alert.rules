@@ -1,0 +1,69 @@
+groups:
+- name: exporters status
+  rules:
+  - alert: PrometheusTargetMissing
+    expr: up == 0
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Prometheus target missing (instance {{ $labels.instance }})"
+      description: "A Prometheus target has disappeared. An exporter might be crashed.
+      VALUE = {{ $value }}"
+
+- name: host and hardware
+  rules:
+  - alert: HostOutOfMemory
+    expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Host out of memory (instance {{ $labels.instance }})
+      description: "Node memory is filling up (< 10% left)\n  VALUE = {{ $value }}"
+
+  - alert: MemAvailableBytes
+    expr: (node_memory_MemAvailable_bytes) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 1m
+    labels:
+      severity: notification
+    annotations:
+      summary: MemAvailableBytes (instance {{ $labels.instance }})
+      description: "Node memory is available bytes = {{ $value }}"
+
+  - alert: MemTotalBytes
+    expr: (node_memory_MemTotal_bytes) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 1m
+    labels:
+      severity: notification
+    annotations:
+      summary: MemTotalBytes (instance {{ $labels.instance }})
+      description: "Node memory is total bytes = {{ $value }}"
+  
+  - alert: NodeFilesystemAvailBytes
+    expr: (node_filesystem_avail_bytes) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 1m
+    labels:
+      severity: notification
+    annotations:
+      summary: NodeFilesystemAvailBytes (instance {{ $labels.instance }})
+      description: "Disk is available bytes = {{ $value }}"
+  
+  - alert: NodeFilesystemSizeBytes
+    expr: (node_filesystem_size_bytes) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 1m
+    labels:
+      severity: notification
+    annotations:
+      summary: Total of disk space filesystem  (instance {{ $labels.instance }})
+      description: "Filesystem size bytes = {{ $value }}"
+
+
+  - alert: CpuLoad
+    expr: ((sum by (instance) (avg by (mode, instance) (rate(node_cpu_seconds_total{mode!="idle"}[1m])))) * 100) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 1m
+    labels:
+      severity: notification
+    annotations:
+      summary: CPU load (instance {{ $labels.instance }})
+      description: "CPU load is = {{ $value }} %"
